@@ -1,0 +1,35 @@
+{
+  "action_meanings": {
+    "0": "NS green",
+    "1": "EW green"
+  },
+  "action_size": 2,
+  "agent_hyperparameters": {
+    "alpha": 0.1,
+    "epsilon_decay": 0.995,
+    "epsilon_initial": 1.0,
+    "epsilon_min": 0.05,
+    "gamma": 0.95
+  },
+  "algorithm_seed": 243,
+  "average_queue_metric": "time-weighted average of NS+EW A1 inbound halting vehicles",
+  "checkpoint": "/Users/rahulahuja07/Desktop/AI_Assignment2/sumo_experiment/runs/q_learning/q_table.npz",
+  "decision_interval_seconds": 10.0,
+  "episode_horizon_seconds": 60.0,
+  "episodes": 1,
+  "evaluation_metrics": "evaluation_metrics.csv",
+  "experiment": "SUMO tabular Q-learning",
+  "exploration_enabled": false,
+  "queue_observation": "SUMO halting-vehicle counts (speed <= 0.1 m/s) summed over A1 inbound lanes; not the custom simulator's FIFO queue",
+  "reproducibility": "SUMO receives a per-episode seed and the agent tie-breaker/exploration RNG is seeded. Reproducibility can still vary across SUMO versions, platforms, or builds.",
+  "reward": "-((observed_queue_before + observed_queue_after) / 2) / 10 per decision interval",
+  "seed": 142,
+  "state_encoding": "phase * 9 + ns_bin * 3 + ew_bin; bins are 0-4, 5-9, and 10+ halting vehicles",
+  "state_size": 18,
+  "sumo_seeds": [
+    142
+  ],
+  "termination": "configured episode horizon or SUMO reports no expected/active vehicles",
+  "throughput_metric": "completed route trips divided by simulated minutes",
+  "waiting_metric": "sum of sampled stopped seconds (speed <= 0.1 m/s) for completed route trips; unfinished trips excluded"
+}

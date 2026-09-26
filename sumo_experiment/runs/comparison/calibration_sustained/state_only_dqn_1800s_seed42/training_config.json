@@ -1,0 +1,85 @@
+{
+  "action_meanings": {
+    "0": "NS green",
+    "1": "EW green"
+  },
+  "action_size": 2,
+  "agent": {
+    "action_size": 2,
+    "batch_size": 64,
+    "device": "cpu",
+    "epsilon_decay": 0.995,
+    "epsilon_final": 0.995,
+    "epsilon_min": 0.05,
+    "feature_order": [
+      "phase_ns",
+      "phase_ew",
+      "ns_queue_norm",
+      "ew_queue_norm",
+      "total_queue_norm",
+      "imbalance_norm"
+    ],
+    "gamma": 0.95,
+    "learning_rate": 0.001,
+    "network": [
+      6,
+      64,
+      64,
+      2
+    ],
+    "queue_scale_vehicles": 20.0,
+    "replay_capacity": 10000,
+    "state_size": 6,
+    "target_update_frequency": 100
+  },
+  "algorithm_seed": 244,
+  "average_queue_metric": "time-weighted mean of NS+EW A1 inbound halting vehicles",
+  "checkpoint": "state_only_dqn_model.pt",
+  "checkpoint_contents": [
+    "online network weights",
+    "target network weights",
+    "optimizer state",
+    "epsilon",
+    "learning-step count",
+    "agent hyperparameters"
+  ],
+  "checkpoint_omissions": [
+    "replay-buffer transitions",
+    "NumPy random generator state",
+    "PyTorch random generator state"
+  ],
+  "decision_interval_seconds": 10.0,
+  "episode_horizon_seconds": 1800.0,
+  "episodes": 1,
+  "experiment": "SUMO state-only DQN",
+  "exploration_enabled": true,
+  "feature_order": [
+    "phase_ns",
+    "phase_ew",
+    "ns_queue_norm",
+    "ew_queue_norm",
+    "total_queue_norm",
+    "imbalance_norm"
+  ],
+  "features": {
+    "ew_queue_norm": "EW inbound halting count / 20",
+    "imbalance_norm": "absolute(NS - EW inbound halting counts) / 20",
+    "ns_queue_norm": "NS inbound halting count / 20",
+    "phase_ew": "1 when EW green is active, else 0",
+    "phase_ns": "1 when NS green is active, else 0",
+    "total_queue_norm": "(NS + EW inbound halting counts) / 40"
+  },
+  "queue_observation": "SUMO halting vehicles (speed <= 0.1 m/s) summed over A1 inbound lanes; same feature formulas and scale as the source environment, but different queue semantics from its FIFO length",
+  "reproducibility": "SUMO and agent RNGs are seeded, but exact resumed training is not guaranteed because replay and RNG state are not checkpointed; cross-platform and cross-version determinism may vary.",
+  "reward": "-((observed_queue_before + observed_queue_after) / 2) / 10 per decision interval",
+  "routes_file": "/Users/rahulahuja07/Desktop/AI_Assignment2/sumo_experiment/scenarios/periodic_demand_1800s.rou.xml",
+  "seed": 42,
+  "state_size": 6,
+  "sumo_seeds": [
+    42
+  ],
+  "termination": "configured horizon or SUMO reports no expected/active vehicles",
+  "throughput_metric": "completed route trips per simulated minute",
+  "training_metrics": "training_metrics.csv",
+  "waiting_metric": "sampled stopped seconds for completed route trips; unfinished trips excluded"
+}

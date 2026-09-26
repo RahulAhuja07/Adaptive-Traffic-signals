@@ -1,0 +1,51 @@
+{
+  "actual_actuation": "controller emits its existing discrete NS/EW interval choices; SumoTrafficEnvironment inserts A1 yellow clearance inside the first 10-second interval after a switch",
+  "arrival_rate_source": "/Users/rahulahuja07/Desktop/AI_Assignment2/sumo_experiment/rl_routes.rou.xml",
+  "arrival_rates_expected_per_interval_ns_ew": [
+    5.0,
+    5.0
+  ],
+  "decision_interval_seconds": 10.0,
+  "episode_horizon_seconds": 360.0,
+  "episodes": 1,
+  "experiment": "SUMO Webster fixed-time evaluation",
+  "lost_time_seconds_per_cycle": 6.0,
+  "lost_time_source": "sum of A1 NS/EW yellow phase durations from rl_intersection.net.xml",
+  "max_cycle_seconds": 120.0,
+  "min_cycle_seconds": 30.0,
+  "queue_metric": "time-weighted A1 inbound halting vehicles (speed <= 0.1 m/s)",
+  "reward_metric": "cumulative reward is recorded for reference; comparisons should emphasize SUMO queue, stopped waiting, throughput, and duration metrics",
+  "saturation_flow_assumption": "configurable original-controller default; not measured or calibrated for this SUMO network",
+  "saturation_flows_veh_per_hour_ns_ew": [
+    1800.0,
+    1800.0
+  ],
+  "seed": 42,
+  "signal_yellow_seconds_ns_ew": [
+    3.0,
+    3.0
+  ],
+  "sumo_actuation_plan": {
+    "cycle_wall_clock_seconds": 120.0,
+    "ew_action_intervals": 6,
+    "interpretation": "Each Webster action owns one decision interval. The yellow clearance is contained in the first interval after a switch, so steady-state effective green is that phase's rounded interval allocation minus the incoming yellow; cycle wall time is the sum of action intervals.",
+    "ns_action_intervals": 6,
+    "steady_state_effective_green_ew_seconds": 57.0,
+    "steady_state_effective_green_ns_seconds": 57.0
+  },
+  "sumo_seeds": [
+    42
+  ],
+  "throughput_metric": "completed route trips per simulated minute",
+  "timing_plan": {
+    "critical_flow_ratio_ew": 1.0,
+    "critical_flow_ratio_ns": 1.0,
+    "cycle_length_seconds": 120.0,
+    "green_ew_intervals": 6.0,
+    "green_ew_seconds": 60.0,
+    "green_ns_intervals": 6.0,
+    "green_ns_seconds": 60.0,
+    "rounded_cycle_seconds": 126.0
+  },
+  "waiting_metric": "sampled stopped seconds for completed trips only; unfinished trips excluded"
+}

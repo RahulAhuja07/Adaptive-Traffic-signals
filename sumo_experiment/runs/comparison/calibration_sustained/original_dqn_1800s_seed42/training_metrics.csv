@@ -1,0 +1,2 @@
+episode,sumo_seed,cumulative_reward,total_stopped_waiting_time_sec_completed,avg_stopped_waiting_time_sec_completed,time_weighted_avg_queue_vehicles,throughput_completed_veh_per_min,completed_vehicles,final_queue_vehicles,episode_duration_sec,decision_steps,termination_reason,epsilon,learning_updates,mean_training_loss,exploration_enabled
+1,42,-504.4499999999999,49180.0,34.034602076124564,28.143333333333334,48.166666666666664,1445,21.0,1800.0,180,horizon,0.995,117,0.9319455864337775,True

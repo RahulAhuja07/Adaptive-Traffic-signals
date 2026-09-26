@@ -1,0 +1,4 @@
+controller,wall_real_sec,wall_user_sec,wall_sys_sec,simulated_duration_sec,sumo_simulation_steps,decision_steps,completed_vehicles,termination_reason,learning_updates,learning_update_kind,checkpoint
+q_learning,5.82,2.19,1.81,1800.0,1800,180,1432,horizon,180,tabular Q updates,q_table.npz
+original_dqn,7.79,3.51,2.11,1800.0,1800,180,1445,horizon,117,optimizer updates,dqn_model.pt
+state_only_dqn,7.24,3.47,2.0,1800.0,1800,180,1431,horizon,117,optimizer updates,state_only_dqn_model.pt

@@ -1,0 +1,59 @@
+{
+  "action_meanings": {
+    "0": "NS green",
+    "1": "EW green"
+  },
+  "agent": {
+    "action_size": 2,
+    "batch_size": 64,
+    "device": "cpu",
+    "epsilon_decay": 0.995,
+    "epsilon_final": 0.990025,
+    "epsilon_initial": 1.0,
+    "epsilon_min": 0.05,
+    "gamma": 0.95,
+    "learning_rate": 0.001,
+    "network": [
+      18,
+      64,
+      64,
+      2
+    ],
+    "replay_capacity": 10000,
+    "state_size": 18,
+    "target_update_frequency": 100
+  },
+  "algorithm_seed": 344,
+  "average_queue_metric": "time-weighted mean of NS+EW A1 inbound halting vehicles",
+  "checkpoint": "/Users/rahulahuja07/Desktop/AI_Assignment2/sumo_experiment/runs/original_dqn/dqn_model.pt",
+  "checkpoint_contents": [
+    "online network weights",
+    "target network weights",
+    "optimizer state",
+    "epsilon",
+    "learning-step count",
+    "agent hyperparameters"
+  ],
+  "checkpoint_omissions": [
+    "replay-buffer transitions",
+    "Python random generator state",
+    "PyTorch random generator state"
+  ],
+  "decision_interval_seconds": 10.0,
+  "episode_horizon_seconds": 360.0,
+  "episodes": 1,
+  "evaluation_metrics": "evaluation_metrics.csv",
+  "experiment": "SUMO original DQN",
+  "exploration_enabled": false,
+  "queue_observation": "SUMO halting vehicles (speed <= 0.1 m/s) on A1 inbound lanes; not the custom simulator's FIFO queue",
+  "reproducibility": "SUMO and agent RNGs are seeded per run. Exact resumed training is not guaranteed because the existing checkpoint omits replay contents and RNG states; cross-version/platform determinism is also not guaranteed.",
+  "reward": "-((observed_queue_before + observed_queue_after) / 2) / 10 per decision interval",
+  "seed": 142,
+  "state_encoding": "integer state 0..17; original DQN one-hot encodes to 18 floats",
+  "sumo_seeds": [
+    142
+  ],
+  "termination": "configured horizon or SUMO reports no expected/active vehicles",
+  "throughput_metric": "completed route trips per simulated minute",
+  "waiting_metric": "sum of sampled stopped seconds for completed route trips; unfinished trips excluded"
+}

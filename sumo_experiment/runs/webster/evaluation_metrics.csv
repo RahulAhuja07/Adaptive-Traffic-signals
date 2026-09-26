@@ -1,0 +1,2 @@
+episode,sumo_seed,cumulative_reward_reference,total_stopped_waiting_time_sec_completed,avg_stopped_waiting_time_sec_completed,time_weighted_avg_queue_vehicles,throughput_completed_veh_per_min,completed_vehicles,final_queue_vehicles,episode_duration_sec,decision_steps,termination_reason,green_intervals_ns,green_intervals_ew,yellow_clearance_seconds_total
+1,42,-81.9,6964.0,24.013793103448275,22.630555555555556,48.333333333333336,290,36.0,360.0,36,horizon,18,18,15.0
