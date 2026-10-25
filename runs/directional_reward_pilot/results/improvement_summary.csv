@@ -1,0 +1,9 @@
+scenario,rl_controller,baseline_controller,metric,direction,rl_mean,baseline_mean,absolute_difference,improvement_percent
+high,Q-Learning,Webster,avg_waiting_time_sec,lower is better,153.69852237476096,306.4350501865504,-152.73652781178947,49.843034508881104
+high,Q-Learning,Webster,time_weighted_avg_queue,lower is better,212.10666666666665,217.83444444444444,-5.7277777777777885,2.6294178555579975
+high,Q-Learning,Webster,final_queue,lower is better,414.6,420.4,-5.7999999999999545,1.3796384395813404
+high,Q-Learning,Webster,throughput_veh_per_min,higher is better,29.939999999999998,29.746666666666663,0.19333333333333513,0.649932765575981
+high,DQN,Webster,avg_waiting_time_sec,lower is better,7.603881889276319,306.4350501865504,-298.83116829727413,97.51859916656164
+high,DQN,Webster,time_weighted_avg_queue,lower is better,307.4011111111111,217.83444444444444,89.56666666666666,-41.116852247629446
+high,DQN,Webster,final_queue,lower is better,606.8,420.4,186.39999999999998,-44.33872502378687
+high,DQN,Webster,throughput_veh_per_min,higher is better,23.53333333333333,29.746666666666663,-6.213333333333331,-20.887494397131327

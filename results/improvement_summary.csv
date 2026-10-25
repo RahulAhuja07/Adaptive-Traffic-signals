@@ -1,0 +1,25 @@
+scenario,rl_controller,baseline_controller,metric,direction,rl_mean,baseline_mean,absolute_difference,improvement_percent
+high,Q-Learning,Webster,avg_waiting_time_sec,lower is better,19.266385846571048,306.4350501865504,-287.1686643399794,93.71273428583248
+high,Q-Learning,Webster,time_weighted_avg_queue,lower is better,311.1766666666667,217.83444444444444,93.34222222222223,-42.85007472545409
+high,Q-Learning,Webster,final_queue,lower is better,653.2,420.4,232.80000000000007,-55.3758325404377
+high,Q-Learning,Webster,throughput_veh_per_min,higher is better,21.986666666666668,29.746666666666663,-7.7599999999999945,-26.08695652173911
+high,DQN,Webster,avg_waiting_time_sec,lower is better,7.907667733108866,306.4350501865504,-298.52738245344153,97.41946369114926
+high,DQN,Webster,time_weighted_avg_queue,lower is better,302.53666666666663,217.83444444444444,84.70222222222219,-38.88375983800132
+high,DQN,Webster,final_queue,lower is better,601.8,420.4,181.39999999999998,-43.14938154138915
+high,DQN,Webster,throughput_veh_per_min,higher is better,23.700000000000003,29.746666666666663,-6.04666666666666,-20.32720753025547
+low,Q-Learning,Webster,avg_waiting_time_sec,lower is better,10.539770476554365,10.189922231748543,0.34984824480582155,-3.4332768871955293
+low,Q-Learning,Webster,time_weighted_avg_queue,lower is better,0.9855555555555556,0.9255555555555555,0.060000000000000164,-6.482593037214904
+low,Q-Learning,Webster,final_queue,lower is better,0.6,1.0,-0.4,40.0
+low,Q-Learning,Webster,throughput_veh_per_min,higher is better,10.886666666666667,10.873333333333331,0.013333333333335418,0.12262415695894009
+low,DQN,Webster,avg_waiting_time_sec,lower is better,10.539770476554365,10.189922231748543,0.34984824480582155,-3.4332768871955293
+low,DQN,Webster,time_weighted_avg_queue,lower is better,0.9855555555555556,0.9255555555555555,0.060000000000000164,-6.482593037214904
+low,DQN,Webster,final_queue,lower is better,0.6,1.0,-0.4,40.0
+low,DQN,Webster,throughput_veh_per_min,higher is better,10.886666666666667,10.873333333333331,0.013333333333335418,0.12262415695894009
+medium,Q-Learning,Webster,avg_waiting_time_sec,lower is better,17.26435616563626,18.95284488977824,-1.6884887241419797,8.908893276769364
+medium,Q-Learning,Webster,time_weighted_avg_queue,lower is better,4.797777777777779,5.487777777777778,-0.6899999999999986,12.57339542417491
+medium,Q-Learning,Webster,final_queue,lower is better,4.2,8.4,-4.2,50.0
+medium,Q-Learning,Webster,throughput_veh_per_min,higher is better,23.286666666666665,23.14666666666667,0.13999999999999702,0.6048387096774064
+medium,DQN,Webster,avg_waiting_time_sec,lower is better,16.501124152220093,18.95284488977824,-2.451720737558148,12.93589828765192
+medium,DQN,Webster,time_weighted_avg_queue,lower is better,4.497777777777777,5.487777777777778,-0.9900000000000002,18.04008908685969
+medium,DQN,Webster,final_queue,lower is better,4.4,8.4,-4.0,47.61904761904761
+medium,DQN,Webster,throughput_veh_per_min,higher is better,23.279999999999998,23.14666666666667,0.1333333333333293,0.5760368663594296

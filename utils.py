@@ -21,7 +21,8 @@ SCENARIOS: Dict[str, Tuple[float, float]] = {
 SCENARIO_LABELS = {"low": "Low demand", "medium": "Medium demand", "high": "High demand"}
 CONTROLLERS = ("Q-Learning", "DQN", "Webster")
 EVALUATION_FIELDS = (
-    "scenario", "controller", "episode", "seed", "avg_waiting_time_sec",
+    "scenario", "controller", "episode", "seed", "green_intervals_ns",
+    "green_intervals_ew", "departures_ns", "departures_ew", "avg_waiting_time_sec",
     "time_weighted_avg_queue", "throughput_veh_per_min", "total_arrived",
     "total_departed", "final_queue", "cumulative_reward",
 )
@@ -59,6 +60,7 @@ def make_environment(
     interval_seconds: float = 10.0,
     service_capacity: int = 5,
     seed: Optional[int] = None,
+    reward_mode: str = "baseline",
 ) -> TrafficEnvironment:
     """Build the same environment configuration for every controller."""
     return TrafficEnvironment(
@@ -67,6 +69,7 @@ def make_environment(
         interval_seconds=interval_seconds,
         service_capacity=service_capacity,
         seed=seed,
+        reward_mode=reward_mode,
     )
 
 

@@ -1,0 +1,10 @@
+Evaluation records read: 45
+Required columns present: True
+Recognized controllers: Q-Learning, DQN, Webster
+Waiting-time NaNs are allowed as undefined values and are never replaced with zero.
+Rows excluded from grouped analyses: 0
+NOTE: high: all controllers share 5 scenario/seed combinations.
+NOTE: low: all controllers share 5 scenario/seed combinations.
+NOTE: medium: all controllers share 5 scenario/seed combinations.
+NOTE: No intended episode count was supplied; count consistency is reported, but the requested count cannot be verified.
+No structural or value-range errors were detected.

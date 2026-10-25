@@ -107,6 +107,30 @@ class TrafficEnvironmentTests(unittest.TestCase):
             _, _, _, info = env.step(action)
             self.assertTrue(all(wait >= 0 for wait in info["waiting_times_sec"]))
 
+    def test_waiting_times_use_interval_end_and_preserve_fifo(self):
+        env = TrafficEnvironment(
+            arrival_rates=(0, 0), episode_steps=1, interval_seconds=10,
+            service_capacity=2, seed=1,
+        )
+        # Seed three known arrivals in arrival order. The zero-rate environment
+        # adds nothing during step(), so the two oldest vehicles must depart.
+        env.queue_ns.extend((1.5, 4.0, 8.5))
+        env.total_arrived = 3
+        env.total_arrived_ns = 3
+
+        _, _, done, info = env.step(0)
+
+        self.assertTrue(done)
+        self.assertEqual(info["waiting_times_sec"], (8.5, 6.0))
+        self.assertEqual(env.get_metrics()["avg_waiting_time_sec"], 7.25)
+        self.assertEqual(list(env.queue_ns), [8.5])
+        self.assertEqual(info["total_arrived"], 3)
+        self.assertEqual(info["total_departed"], 2)
+        self.assertEqual(info["final_queue"], 1)
+        self.assertEqual(
+            info["total_arrived"], info["total_departed"] + info["final_queue"]
+        )
+
     def test_metrics_have_required_keys(self):
         env = TrafficEnvironment(seed=1)
         self.assertEqual(

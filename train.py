@@ -37,11 +37,12 @@ def train_q_learning(
     interval_seconds: float,
     service_capacity: int,
     output_root: Path = PROJECT_DIR,
+    reward_mode: str = "baseline",
 ) -> List[Dict[str, object]]:
     """Train one tabular agent and save its per-episode log and Q-table."""
     agent = QLearningAgent(seed=seed + 101)
     rows: List[Dict[str, object]] = []
-    env = make_environment(rates, episode_steps, interval_seconds, service_capacity)
+    env = make_environment(rates, episode_steps, interval_seconds, service_capacity, reward_mode=reward_mode)
     for episode in range(1, episodes + 1):
         state = env.reset(seed=seed + episode)
         done = False
@@ -73,11 +74,12 @@ def train_dqn(
     interval_seconds: float,
     service_capacity: int,
     output_root: Path = PROJECT_DIR,
+    reward_mode: str = "baseline",
 ) -> List[Dict[str, object]]:
     """Train one DQN agent and save its per-episode log and checkpoint."""
     agent = DQNAgent(seed=seed + 202)
     rows: List[Dict[str, object]] = []
-    env = make_environment(rates, episode_steps, interval_seconds, service_capacity)
+    env = make_environment(rates, episode_steps, interval_seconds, service_capacity, reward_mode=reward_mode)
     for episode in range(1, episodes + 1):
         state = env.reset(seed=seed + episode)
         done = False
@@ -111,6 +113,7 @@ def run_training(
     interval_seconds: float = 10.0,
     service_capacity: int = 5,
     output_root: Path = PROJECT_DIR,
+    reward_mode: str = "baseline",
 ) -> None:
     """Train both algorithms for each selected demand scenario."""
     if episodes <= 0 or episode_steps <= 0:
@@ -121,11 +124,11 @@ def run_training(
         print(f"Training {scenario_name} demand: NS={rates[0]}, EW={rates[1]}")
         train_q_learning(
             scenario_name, rates, episodes, seed, episode_steps,
-            interval_seconds, service_capacity, output_root,
+            interval_seconds, service_capacity, output_root, reward_mode,
         )
         train_dqn(
             scenario_name, rates, episodes, seed, episode_steps,
-            interval_seconds, service_capacity, output_root,
+            interval_seconds, service_capacity, output_root, reward_mode,
         )
     print(f"Training logs and models saved under {output_root}")
 
@@ -139,6 +142,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--interval-seconds", type=float, default=10.0)
     parser.add_argument("--service-capacity", type=int, default=5)
     parser.add_argument("--output-dir", dest="output_root", type=Path, default=PROJECT_DIR)
+    parser.add_argument("--reward-mode", choices=("baseline", "directional"), default="baseline")
     return parser
 
 

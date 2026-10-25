@@ -117,7 +117,7 @@ process or information constraints as the RL agents.
 
 ## Dependencies and tests
 
-The required external packages are NumPy, PyTorch, and Matplotlib. For the simplest
+The required external packages are NumPy, PyTorch, Matplotlib, and SciPy. For the simplest
 cross-platform setup, install the requirements in the active virtual
 environment. PyTorch's recommended command varies by operating system and
 hardware; use the [official PyTorch installation selector](https://pytorch.org/get-started/locally/)
@@ -220,6 +220,67 @@ time (with standard-deviation error bars), time-weighted average queue,
 throughput, and final queue. These initial plots do not establish that one
 controller is better; interpret them with the episode-level data and the
 Webster/RL information difference in mind.
+
+## Part 4: Comparative analysis
+
+Run the analysis after Part 3 has produced `results/evaluation_results.csv`:
+
+```bash
+python analyze_results.py
+```
+
+The evaluation CSV is the source of truth. The analysis checks required
+columns, duplicate or missing episode records, controller/scenario names,
+value ranges, traffic accounting, episode counts, and shared scenario/seed
+sets. A specific expected evaluation count can be checked with, for example,
+`python analyze_results.py --expected-episodes 30`. Data issues and any
+structurally excluded rows are listed in `results/data_validation_report.txt`.
+Waiting-time NaNs remain undefined; they are not changed to zero. If the
+evaluation CSV is missing or its required columns are incomplete, the workflow
+writes a clear report template and empty analysis tables rather than inventing
+experimental results. Other quality problems are reported and flagged while
+available metric summaries remain traceable to their source rows.
+
+The analysis reports mean, median, standard deviation, range, quartiles, and
+95% t confidence intervals where there are at least two valid observations.
+Waiting time is measured only among vehicles that departed, so it must be read
+alongside average queue, throughput, departures, and final queue. Throughput
+and departure-to-arrival ratio are summarized episode by episode. RL percentage
+improvement relative to Webster is `(Webster - RL) / Webster * 100` for lower
+is better metrics, and `(RL - Webster) / Webster * 100` for throughput. A zero
+or undefined baseline yields an undefined percentage. Absolute differences
+are separately reported as RL mean minus Webster mean.
+
+When scenario/seed records are matched, controller tests use paired differences.
+Depending on the paired-difference normality check, the workflow uses a paired
+t-test or Wilcoxon signed-rank test. If records are not sufficiently matched,
+it uses an independent test only on unmatched seed sets. Holm correction
+adjusts p-values across the three controller-pair tests within each
+scenario/metric family. A p-value describes evidence under the test
+assumptions; it is not the size or practical importance of a traffic benefit.
+The report also includes metric-by-metric controller rankings, not one
+arbitrary overall winner.
+
+The Shapiro-Wilk check has limited power with small episode counts. The
+Wilcoxon signed-rank test compares paired ranks and its location interpretation
+works best when paired differences are reasonably symmetric; it can also have
+low power on small samples. Confidence intervals and test results should
+therefore be interpreted with the sample size and design, not as guarantees.
+
+Outputs are written to `results/`: `data_validation_report.txt`,
+`analysis_report.md`, expanded `summary_results.csv`, `statistical_tests.csv`,
+`improvement_summary.csv`, and `controller_rankings.csv`. Report-ready plots
+are saved to `plots/`: waiting time, average queue, throughput, final queue,
+cumulative reward, a normalized performance heatmap, and training convergence
+when Part 3 training logs are available. Heatmap scores are min-max normalized
+within each scenario/metric column; lower-is-better metrics are inverted so
+higher scores mean a better observed value. The heatmap is descriptive and is
+not a standalone selection rule.
+
+The custom simulator uses synthetic Poisson arrivals and simplified queues and
+signal service. These results cannot establish real-world traffic performance
+without realistic traffic data and validation against a calibrated simulator
+or field observations.
 
 ## Set up in VS Code
 

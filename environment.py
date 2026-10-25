@@ -27,6 +27,7 @@ class TrafficEnvironment:
         interval_seconds: float = 10,
         service_capacity: int = 5,
         seed: Optional[int] = None,
+        reward_mode: str = "baseline",
     ) -> None:
         if len(arrival_rates) != 2:
             raise ValueError("arrival_rates must contain (NS rate, EW rate)")
@@ -48,11 +49,14 @@ class TrafficEnvironment:
             raise ValueError("interval_seconds must be a finite positive number")
         if isinstance(service_capacity, bool) or not isinstance(service_capacity, Integral) or service_capacity < 0:
             raise ValueError("service_capacity must be a nonnegative integer")
+        if reward_mode not in ("baseline", "directional"):
+            raise ValueError("reward_mode must be 'baseline' or 'directional'")
 
         self.arrival_rates = (float(arrival_rates[0]), float(arrival_rates[1]))
         self.episode_steps = int(episode_steps)
         self.interval_seconds = float(interval_seconds)
         self.service_capacity = int(service_capacity)
+        self.reward_mode = reward_mode
         self._rng = np.random.default_rng(seed)
         self.reset()
 
@@ -141,6 +145,10 @@ class TrafficEnvironment:
         # Reward uses average queue at the start and end of the interval. It is
         # a queue-length penalty, not the sum of individual vehicle waits.
         reward = -((queue_before + queue_after) / 2.0) / 10.0
+        if self.reward_mode == "directional":
+            # Retain the original total-queue cost and add a modest penalty for
+            # leaving one approach much more congested than the other.
+            reward -= 0.05 * abs(len(self.queue_ns) - len(self.queue_ew))
         self.cumulative_reward += reward
         self._waiting_times.extend(departed_waits)
         self._queue_time_sum += queue_after * self.interval_seconds

@@ -1,0 +1,16 @@
+scenario,metric,direction,rank,controller,mean,std,valid_observations
+high,avg_waiting_time_sec,lower,1.0,DQN,7.603881889276319,1.5727246854633188,5
+high,avg_waiting_time_sec,lower,2.0,Q-Learning,153.69852237476096,17.827872167571357,5
+high,avg_waiting_time_sec,lower,3.0,Webster,306.4350501865504,16.086483239230372,5
+high,time_weighted_avg_queue,lower,3.0,DQN,307.4011111111111,12.440115020706,5
+high,time_weighted_avg_queue,lower,1.0,Q-Learning,212.10666666666665,16.116812937403576,5
+high,time_weighted_avg_queue,lower,2.0,Webster,217.83444444444444,14.682802319401338,5
+high,final_queue,lower,3.0,DQN,606.8,15.509996776273034,5
+high,final_queue,lower,1.0,Q-Learning,414.6,26.971095639591653,5
+high,final_queue,lower,2.0,Webster,420.4,24.9367199126108,5
+high,throughput_veh_per_min,higher,3.0,DQN,23.53333333333333,1.098483803552272,5
+high,throughput_veh_per_min,higher,1.0,Q-Learning,29.939999999999998,0.032659863237109364,5
+high,throughput_veh_per_min,higher,2.0,Webster,29.746666666666663,0.10456258094238652,5
+high,cumulative_reward,higher,3.0,DQN,-8250.73,nan,
+high,cumulative_reward,higher,2.0,Q-Learning,-5486.35,nan,
+high,cumulative_reward,higher,1.0,Webster,-4135.85,nan,

@@ -34,6 +34,10 @@ def run_greedy_episode(
     if controller_name == "Webster":
         controller.reset()
     done = False
+    green_intervals_ns = 0
+    green_intervals_ew = 0
+    departures_ns = 0
+    departures_ew = 0
     while not done:
         if controller_name == "Webster":
             action = controller.choose_action()
@@ -41,13 +45,21 @@ def run_greedy_episode(
             action = controller.choose_action(state, training=False)
         if action not in (0, 1):
             raise RuntimeError(f"{controller_name} returned invalid action {action!r}")
-        state, _, done, _ = env.step(action)
+        green_intervals_ns += int(action == 0)
+        green_intervals_ew += int(action == 1)
+        state, _, done, info = env.step(action)
+        departures_ns += int(info["departures_ns"])
+        departures_ew += int(info["departures_ew"])
     metrics = env.get_metrics()
     return {
         "scenario": scenario,
         "controller": controller_name,
         "episode": episode,
         "seed": seed,
+        "green_intervals_ns": green_intervals_ns,
+        "green_intervals_ew": green_intervals_ew,
+        "departures_ns": departures_ns,
+        "departures_ew": departures_ew,
         **metrics,
     }
 
@@ -82,6 +94,7 @@ def evaluate_scenario(
     interval_seconds: float = 10.0,
     service_capacity: int = 5,
     output_root: Path = PROJECT_DIR,
+    reward_mode: str = "baseline",
 ) -> List[Dict[str, object]]:
     """Evaluate all three controllers under shared parameters and episode seeds."""
     q_agent, dqn_agent = load_learned_models(output_root, scenario, model_seed)
@@ -89,7 +102,7 @@ def evaluate_scenario(
         arrival_rates=rates, interval_seconds=interval_seconds
     )
     controllers = (("Q-Learning", q_agent), ("DQN", dqn_agent), ("Webster", webster))
-    env = make_environment(rates, episode_steps, interval_seconds, service_capacity)
+    env = make_environment(rates, episode_steps, interval_seconds, service_capacity, reward_mode=reward_mode)
     rows: List[Dict[str, object]] = []
     for episode in range(1, episodes + 1):
         # Pair all controllers on this same deterministic arrival seed.
@@ -111,6 +124,7 @@ def run_evaluation(
     service_capacity: int = 5,
     output_root: Path = PROJECT_DIR,
     make_plots: bool = True,
+    reward_mode: str = "baseline",
 ) -> Tuple[List[Dict[str, object]], List[Dict[str, object]]]:
     """Evaluate trained models, save per-episode/summary CSVs, and plot results."""
     if episodes <= 0 or episode_steps <= 0:
@@ -133,6 +147,7 @@ def run_evaluation(
                 interval_seconds,
                 service_capacity,
                 output_root,
+                reward_mode,
             )
         )
     summary = aggregate_evaluation(rows)
@@ -157,6 +172,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--service-capacity", type=int, default=5)
     parser.add_argument("--output-dir", dest="output_root", type=Path, default=PROJECT_DIR)
     parser.add_argument("--no-plots", action="store_true", help="skip plot generation")
+    parser.add_argument("--reward-mode", choices=("baseline", "directional"), default="baseline")
     return parser
 
 
