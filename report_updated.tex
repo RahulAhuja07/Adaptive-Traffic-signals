@@ -1,0 +1,80 @@
+\documentclass[conference]{IEEEtran}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage[hidelinks]{hyperref}
+
+\title{Adaptive Traffic Signal Control with Reinforcement Learning}
+\author{\IEEEauthorblockN{Rahul Ahuja}
+\IEEEauthorblockA{B23CH1037\\
+\href{https://github.com/RahulAhuja07/Adaptive-Traffic-signals}{GitHub repository}}}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We compare tabular Q-learning and two DQN state representations for a stochastic, two-approach signal, using Webster timing as a conventional baseline. Across 30 paired evaluation episodes per demand scenario, the richer six-feature DQN avoids the original DQN's severe high-demand directional starvation. The high-demand setting is overloaded, however, and no controller prevents queue growth. The comparison is descriptive: the richer-state checkpoint received more training than the original agents.
+\end{abstract}
+
+\section{Environment and RL Formulation}
+The custom simulator represents one intersection with north--south (NS) and east--west (EW) FIFO queues. Each episode has 180 intervals of 10 seconds. In each interval, independent Poisson arrivals with scenario-specific expected counts enter the queues; the selected green serves at most five vehicles. Arrivals are synthetic and the simulator is not calibrated to a real junction.
+
+The action space is $\mathcal{A}=\{0,1\}$ (NS green or EW green). Q-learning and the original DQN observe one of 18 discrete states: current phase (2 values) and low/medium/high bins for each queue (3 values each), giving $2\times3\times3=18$. The state-only DQN instead observes six continuous features: one-hot phase, NS and EW queue lengths divided by 20, total queue divided by 40, and absolute queue imbalance divided by 20. This changes the observation only; traffic dynamics and reward are unchanged.
+
+For total queue $Q_t$ before and $Q_{t+1}$ after an interval, the implemented reward is
+\[
+r_t=-\frac{(Q_t+Q_{t+1})/2}{10}.
+\]
+There is no separate imbalance term in the state-only experiment. Q-learning uses the terminal-aware target $r_t+\gamma(1-d_t)\max_a Q(s_{t+1},a)$. DQN uses replay, a target network, and a Huber loss for the same Bellman target. Webster is a fixed-cycle comparison baseline whose timing plan uses the configured arrival rates as demand information; it is not an RL controller.
+
+\section{Experimental Setup and Results}
+The low, medium, and high expected arrivals (NS, EW) per interval are $(1.0,0.8)$, $(2.8,1.2)$, and $(4.0,3.5)$. Evaluation used 30 common episode seeds (42--71) per controller and scenario, greedy learned policies, 180 steps per episode, and no learning updates. Original Q-learning/DQN checkpoints were trained for 100 episodes; the evaluated state-only DQN checkpoint (seed 42) was trained for 300 episodes. Thus the results do not isolate state representation from training budget. Table~\ref{tab:results} reports means recomputed from the saved episode-level CSV; queues are vehicles and throughput is vehicles/minute.
+
+\begin{table*}[!t]
+\centering
+\caption{Means over 30 paired evaluation episodes. Green and departures columns show NS/EW counts per episode.}
+\label{tab:results}
+\scriptsize
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{llrrrrrr}
+\toprule
+Scenario & Controller & Wait (s) & Avg. queue & Final queue & Throughput & Green NS/EW & Depart NS/EW\\
+\midrule
+Low & Q-learning & 10.2 & 0.9 & 0.9 & 10.8 & 90/90 & 177/146\\
+Low & Original DQN & 10.2 & 0.9 & 0.9 & 10.8 & 90/90 & 177/146\\
+Low & State-only DQN & 10.0 & 0.9 & 0.8 & 10.8 & 117/63 & 177/147\\
+Low & Webster & 10.2 & 0.9 & 1.3 & 10.8 & 90/90 & 176/147\\
+\midrule
+Medium & Q-learning & 17.4 & 4.9 & 5.8 & 23.6 & 103/77 & 494/214\\
+Medium & Original DQN & 17.0 & 4.8 & 5.4 & 23.6 & 138/43 & 496/213\\
+Medium & State-only DQN & 13.2 & 3.2 & 4.2 & 23.7 & 126/54 & 496/214\\
+Medium & Webster & 19.6 & 5.8 & 8.2 & 23.5 & 120/60 & 491/215\\
+\midrule
+High & Q-learning & 12.0 & 336.6 & 692.9 & 21.9 & 7/173 & 32/624\\
+High & Original DQN & 8.6 & 310.4 & 626.9 & 24.1 & 167/13 & 675/47\\
+High & State-only DQN & 293.4 & 227.0 & 450.4 & 29.9 & 110/70 & 548/350\\
+High & Webster & 313.7 & 232.2 & 455.7 & 29.8 & 100/80 & 493/400\\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+In high demand, expected arrivals are 45 vehicles/minute while theoretical service capacity is at most 30 vehicles/minute, so persistent congestion is expected. The original DQN's low departed-vehicle wait (8.6 s) accompanies only 47 EW departures per episode, versus 350 for the state-only DQN. The state-only DQN and Webster have similar high-demand mean queue and throughput, but neither clears the backlog. Departed-vehicle waiting time excludes vehicles left in queues and must not be interpreted alone.
+
+For a paired comparison of state-only DQN against original DQN, two-sided Wilcoxon signed-rank tests were run per scenario for wait, average queue, final queue, and throughput ($n=30$ each); Holm correction covered the 12 tests. The adjusted $p$-values were below 0.002 for each of these four high-demand metrics and below 0.002 for each medium-demand metric. In low demand, wait and average queue differences were statistically detectable after correction ($p_{adj}=0.0145$), but small in magnitude; final queue and throughput were not ($p_{adj}=1.0$). These tests compare the trained policies and do not remove the training-budget difference.
+
+\begin{figure*}[!t]
+\centering
+\includegraphics[width=0.48\textwidth]{report_queue_comparison.png}\hfill
+\includegraphics[width=0.48\textwidth]{report_high_demand_directional.png}
+\caption{Left: time-weighted queue means with standard-deviation bars. Right: mean NS/EW departures in the overloaded high-demand scenario.}
+\label{fig:results}
+\end{figure*}
+
+\section{Discussion and Limitations}
+The richer observation distinguishes directional queue magnitudes that the original three-bin-per-approach representation aliases. Its high-demand policy allocates green time to both approaches and achieves higher throughput than the original DQN, at the cost of much higher departed-vehicle wait. Queue stability is impossible under the stated high-demand capacity mismatch. Webster is informed by the scenario's configured demand, unlike the learned agents. The environment omits lanes, turns, pedestrians, lost switching time, and real traffic calibration; the results support conclusions only about this simplified simulator. Only one trained checkpoint per learned controller is used in the reported evaluation, and the state-only model had a longer training budget.
+
+\section{Conclusion}
+State representation is associated with substantially different controller behavior in these experiments. The richer-state DQN reduces directional starvation and improves throughput under high demand, but it does not dominate all metrics, and its longer training budget limits causal attribution. The results show the value of reporting directional service and queue metrics alongside waiting time, rather than treating one metric as a universal measure of success.
+
+\end{document}
