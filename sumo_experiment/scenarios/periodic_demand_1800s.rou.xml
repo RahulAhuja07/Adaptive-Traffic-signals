@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8'?>
+<routes>
+    <vType id="car" vClass="passenger" accel="2.6" decel="4.5" maxSpeed="13.9" />
+    <route id="NS_route" edges="B2A1 A1B4" />
+    <route id="EW_route" edges="B1A1 A1B3" />
+    <flow id="NS_flow" type="car" route="NS_route" begin="0" end="1800" period="2" />
+    <flow id="EW_flow" type="car" route="EW_route" begin="0" end="1800" period="2" />
+</routes>

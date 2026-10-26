@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<routes>
+    <vType id="car" vClass="passenger"
+           accel="2.6" decel="4.5" maxSpeed="13.9"/>
+
+    <!-- North-South traffic -->
+    <route id="NS_route" edges="B0A0 A0A1"/>
+    <flow id="NS_flow" type="car" route="NS_route"
+          begin="0" end="600" period="2"/>
+
+    <!-- East-West traffic -->
+    <route id="EW_route" edges="A0B0 B0B1"/>
+    <flow id="EW_flow" type="car" route="EW_route"
+          begin="0" end="600" period="2"/>
+</routes>
